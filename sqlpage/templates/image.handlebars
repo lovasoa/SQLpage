@@ -1,0 +1,19 @@
+<div class="my-2 col-md-{{default width 12}}{{#if center}} mx-auto{{/if}}">
+{{#if caption}}<figure>{{#delay}}<figcaption class="text-center">{{caption}}</figcaption></figure>{{/delay}}{{/if}}
+{{#if link}}<a href="{{link}}">{{#delay}}</a>{{/delay}}{{/if}}
+<img 
+    class="{{class}}" 
+    src="{{image}}"
+    {{~#if id}}id=" {{id}}"{{/if}} 
+    {{~#if description}} alt="{{description}}"{{/if~}}
+    {{~#if cross_origin}} crossorigin="{{cross_origin}}" {{/if~}}
+    {{~#if decoding}} decoding="{{decoding}}" {{/if~}}
+    {{~#if fetch_priority}} fetchpriority="{{fetch_priority}}" {{/if~}}
+    {{~#if loading}} loading="{{loading}}" {{/if~}}
+    {{~#if referrer_policy}} referrerpolicy="{{referrer_policy}}" {{/if~}}
+    {{~#if sizes}} sizes="{{sizes}}" {{/if~}}
+    {{~#if src_set}} srcset="{{src_set}}" {{/if~}}
+/>
+{{#if link}}</a>{{/if}}
+{{flush_delayed}}
+</div>
