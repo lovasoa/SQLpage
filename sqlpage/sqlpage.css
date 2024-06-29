@@ -51,3 +51,49 @@ td > p {
   --tblr-datagrid-padding: 1.25rem;
   --tblr-datagrid-item-width: 6rem;
 }
+
+/* loader container */
+.sqlpage-loader-container {
+  position: fixed;
+  text-align: center;
+  left: 50vw;
+  top: 50vh;
+  margin-top: -5.5em;
+  margin-left: -87.5px;
+  padding-bottom: 2em;
+  height: 9em;
+  width: 175px;
+}
+.sqlpage-loader-container:has(.status) {
+  position: inherit;
+  text-align: inherit;
+  left: inherit;
+  top: inherit;
+  margin-top: inherit;
+  margin-left: inherit;
+  padding-bottom: inherit;
+  height: inherit;
+  width: inherit;
+}
+div.sqlpage-loader-start:has(+ .sqlpage-loader-stop) {
+  /* hide if followed by sqlpage-loader-stop */
+  display: none;
+}
+/* end loader container */
+
+/* progress container */
+.sqlpage-progress-container {
+  margin: 1em 0 1em;
+}
+div.sqlpage-progress-container:has(+ .sqlpage-progress-container) {
+  /* hide if followed by sqlpage-progress-container */
+  display: none;
+}
+.sqlpage-progress-container label {
+  text-align:left;
+  color: var(--tblr-text-primary);
+}
+.sqlpage-progress-container label:after {
+  content: "…";
+}
+/* end progress container */

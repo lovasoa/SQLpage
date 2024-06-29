@@ -1,0 +1,42 @@
+<div class="sqlpage-progress-container">
+  <div class="progress {{~#if size}} progress-{{size}}{{/if}}">
+    <div
+      id="sqlpage-loading-{{default stage "progress"}}"
+      class="progress-bar
+      {{~#if (not percent)}} progress-bar-indeterminate{{/if}}
+      {{~#if color}} bg-{{color}}{{/if}}"
+      role="progressbar"
+      aria-valuenow="{{percent}}"
+      {{~#if percent}}style="width: {{percent}}%; display: block"{{/if}} 
+      aria-valuemin="0" aria-valuemax="100"
+      {{~#if stage}}aria-label="{{stage}}"{{/if}}>
+    </div>
+  </div>
+  {{~#if stage}}
+    <br>
+    <label for="sqlpage-loading-{{default stage "progress"}}">{{stage}}</label>
+  {{/if}}
+</div>
+{{#each_row}}
+{{#if (or percent stage)}}
+  <div class="sqlpage-progress-container">
+    <div class="progress {{~#if ../size}} progress-{{../size}}{{/if}}">
+      <div
+        id="sqlpage-loading-{{default stage "progress"}}"
+        class="progress-bar
+        {{~#if (not percent)}} progress-bar-indeterminate{{/if}}
+        {{~#if ../color}} bg-{{../color}}{{/if}}"
+        role="progressbar"
+        aria-valuenow="{{percent}}"
+        {{~#if percent}}style="width: {{percent}}%; display: block"{{/if}} 
+        aria-valuemin="0" aria-valuemax="100"
+        {{~#if stage}}aria-label="{{stage}}"{{/if}}>
+      </div>
+    </div>
+    {{~#if stage}}
+      <br>
+      <label for="sqlpage-loading-{{default stage "progress"}}">{{stage}}</label>
+    {{/if}}
+  </div>
+{{/if}}
+{{/each_row}}

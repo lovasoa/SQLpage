@@ -820,6 +820,69 @@ and `shell.json` would be placed at the website''s root and contain the followin
 ```
 ', NULL);
 
+INSERT INTO component(name, icon, description, introduced_in_version) VALUES
+    ('loader-start', 'refresh', 'Display a spinner to indicate page is loading.', '0.25.0');
+
+INSERT INTO parameter(component, name, description_md, type, top_level, optional) SELECT 'loader-start', * FROM (VALUES
+    ('spinner', '
+The name of a [spinner](https://tabler.io/docs/components/spinners) (from tabler.io).
+Default is "spinner-border".
+Set to the empty string to disable the spinner - e.g. to display only progress
+updates.
+', 'TEXT', TRUE, TRUE),
+    ('size', 'Size of the spinner (e.g. sm, lg) [see here](https://tabler.io/docs/components/progress)', 'TEXT', TRUE, TRUE),
+    ('color', 'Color of the spinner', 'COLOR', TRUE, TRUE)
+) x;
+
+INSERT INTO component(name, icon, description, introduced_in_version) VALUES
+    ('loader-stop', 'refresh-off', '
+Hide the spinner displayed by the loader-start component.
+', '0.25.0');
+
+INSERT INTO component(name, icon, description, introduced_in_version) VALUES
+    ('progress', 'time-duration-15', 'Display a progress bar.', '0.25.0');
+
+INSERT INTO parameter(component, name, description_md, type, top_level, optional) SELECT 'progress', * FROM (VALUES
+    -- top-level
+    ('percent', 'Number between 0 and 100.', 'INTEGER', TRUE, TRUE),
+    ('stage', 'A message to display under the progress bar to indicate which stage the process is at.', 'TEXT', TRUE, TRUE),
+    ('color', 'The fill color of the progress bar', 'COLOR', TRUE, TRUE),
+    ('size', 'The size of the progress bar (e.g. sm, lg) [see here](https://tabler.io/docs/components/progress)', 'TEXT', TRUE, TRUE),
+    -- item-level
+    ('percent', 'Number between 0 and 100.', 'INTEGER', FALSE, TRUE),
+    ('stage', 'A message to display under the progress bar to indicate which stage the process is at.', 'TEXT', FALSE, TRUE)
+) x;
+
+INSERT INTO example(component, description, properties) VALUES
+    ('loader-start', '
+Will be displayed until [loader-stop](/documentation.sql?component=loader-stop) is selected.
+
+See the [live example](/examples/show-progress/).
+
+Source is [here](https://github.com/lovasoa/SQLpage/tree/main/examples/official-site/examples/show-progress)
+', NULL),
+    ('loader-stop', '
+Hide the spinner displayed by the [loader-start](/documentation.sql?component=loader-start) component.
+
+See the [live example](/examples/show-progress/).
+
+Source is [here](https://github.com/lovasoa/SQLpage/tree/main/examples/official-site/examples/show-progress)
+', NULL),
+    ('progress', '
+Can be used on it''s own (will persist on the page) or with
+[loader-start](/documentation.sql?component=loader-start) and
+[loader-stop](/documentation.sql?component=loader-stop) to hide the progress bar once processing
+is complete.
+
+Subsequent uses of this component and/or any rows will
+update the progress bar.
+
+See the [live example](/examples/show-progress/).
+
+Source is [here](https://github.com/lovasoa/SQLpage/tree/main/examples/official-site/examples/show-progress)
+', NULL)
+;
+
 INSERT INTO component(name, icon, description) VALUES
     ('shell', 'layout-navbar', 'Personalize the "shell" surrounding your page contents. Used to set properties for the entire page.');
 
@@ -882,6 +945,7 @@ You see the [page layouts demo](./examples/layouts.sql) for a live example of th
                     {"link": "/examples/multistep-form", "title": "Forms", "icon": "edit"},
                     {"link": "/examples/handle_picture_upload.sql", "title": "File uploads", "icon": "upload"},
                     {"link": "/examples/authentication/", "title": "Password protection", "icon": "password-user"},
+                    {"link": "/examples/show-progress/", "title": "Tracking progress of background tasks", "icon": "loader-2"},
                     {"link": "//github.com/lovasoa/SQLpage/blob/main/examples/", "title": "All examples & demos", "icon": "code"}
                 ]},
                 {"title": "Community", "submenu": [
