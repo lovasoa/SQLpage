@@ -63,7 +63,7 @@
 
 <body class="layout-{{default layout 'boxed'}}" {{#if theme}}data-bs-theme="{{theme}}"{{/if}}>
 <div class="page">
-    {{#if title}}
+    {{#if (or (or title (or icon image)) (gt (len (to_array menu_item)) 0))}}
         <header id="sqlpage_header">
         <nav class="navbar navbar-expand-md navbar-light{{#if fixed_top_menu}} fixed-top{{/if}}">
         <div class="container-fluid">
