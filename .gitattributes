@@ -1,0 +1,1 @@
+*.sql linguist-detectable=true
