@@ -1,0 +1,6 @@
+{{#each_row}}
+{{#if (eq @row_index 0)}}
+{{#each this}}{{@key}}{{#unless @last}}{{default ../../separator ","}}{{/unless}}{{/each}}{{../linebreak}}
+{{/if}}
+{{#each this}}{{this}}{{#unless @last}}{{default ../../separator ","}}{{/unless}}{{/each}}{{../linebreak}}
+{{/each_row}}

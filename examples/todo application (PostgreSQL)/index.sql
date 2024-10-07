@@ -18,3 +18,7 @@ select
     'green' as color,
     'Add new todo'  as title,
     'circle-plus'  as icon;
+select 
+    '/csv_attachment.sql' as link,
+    'Download'  as title,
+    'download' as icon;

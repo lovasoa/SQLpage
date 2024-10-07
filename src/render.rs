@@ -60,6 +60,7 @@ impl<'a, W: std::io::Write> HeaderContext<W> {
             Some("http_header") => self.add_http_header(&data).map(PageContext::Header),
             Some("redirect") => self.redirect(&data).map(PageContext::Close),
             Some("json") => self.json(&data).map(PageContext::Close),
+            Some("csv_attachment") => self.csv_attachment(data).await,
             Some("cookie") => self.add_cookie(&data).map(PageContext::Header),
             Some("authentication") => self.authentication(data).await,
             _ => self.start_body(data).await,
@@ -199,6 +200,25 @@ impl<'a, W: std::io::Write> HeaderContext<W> {
         self.response
             .insert_header((header::CONTENT_TYPE, "application/json"));
         Ok(self.response.body(json_response))
+    }
+
+    async fn csv_attachment(mut self, data: JsonValue) -> anyhow::Result<PageContext<W>> {
+        let filename = data
+            .get("filename")
+            .and_then(JsonValue::as_str)
+            .unwrap_or("output.csv");
+
+        self.response
+            .insert_header((header::CONTENT_TYPE, "text/csv"))
+            .insert_header((
+                header::CONTENT_DISPOSITION,
+                format!("attachment; filename=\"{}\"", filename),
+            ));
+
+        self.request_context.is_embedded = true;
+        let page_content = self.start_body(data).await?;
+
+        Ok(page_content)
     }
 
     async fn authentication(mut self, mut data: JsonValue) -> anyhow::Result<PageContext<W>> {
