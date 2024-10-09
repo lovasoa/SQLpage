@@ -26,8 +26,7 @@
             <div class="card h-100
                 {{~#if active}} card-active{{/if~}}
                 {{~#if background_color}} bg-{{background_color}} text-{{background_color}}-fg{{/if~}}
-                "
-                {{#if (and embed (ne embed_mode "iframe"))}}data-pre-init="card" data-embed="{{embed}}"{{/if}}>
+                ">
                 {{#if link}}
                     <a href="{{link}}" style="text-decoration: inherit; color: inherit">
                 {{/if}}
@@ -39,13 +38,19 @@
                 {{/if}}
                 <div class="card-body">
                     {{#if title}}<h2 class="card-title fs-3 me-3">{{title}}</h2>{{/if}}
-                    <div class="card-content remove-bottom-margin{{#if (and icon (not title))}} pe-4{{/if}}">
+                    <div class="card-content remove-bottom-margin{{#if (and icon (not title))}} pe-4{{/if}}"
+                        {{#if (and embed (ne embed_mode "iframe"))}} data-embed="{{embed}}"{{/if}}
+                    >
                         {{~description~}}
                         {{~#if description_md~}}
                             {{{markdown description_md}}}
                         {{~/if~}}
+                        {{#if (and embed (ne embed_mode "iframe"))}}
+                            <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        {{~/if~}}
                     </div>
-                    {{~#if embed ~}}
                     {{~#if (eq embed_mode "iframe")}}
                         <iframe src="{{embed}}" 
                             width="{{#if width}}{{width}}{{else}}100%{{/if}}"
@@ -55,11 +60,6 @@
                             {{~#if style}} style="{{style}}"{{/if~}}
                         >
                         </iframe>
-                    {{~else~}}
-                        <div class="spinner-border card-loading-placeholder" role="status" style="width: 3rem; height: 3rem;">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    {{~/if~}}
                     {{~/if~}}
                 </div>
                 {{#if link}}
@@ -67,11 +67,11 @@
                 {{/if}}
                 {{#if footer}}
                     <div class="card-footer text-muted py-2">
-                    {{#if footer_link}}
+                        {{#if footer_link}}
                             <a href="{{footer_link}}">{{footer}}</a>
-                    {{else}}
+                        {{else}}
                             {{footer}}
-                    {{/if}}
+                        {{/if}}
                     </div>
                 {{/if}}
                 {{#if footer_md}}

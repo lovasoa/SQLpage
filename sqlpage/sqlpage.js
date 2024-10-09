@@ -3,24 +3,29 @@
 
 const nonce = document.currentScript.nonce;
 
-function sqlpage_card() {
-    for (const c of document.querySelectorAll("[data-pre-init=card]")) {
-        const source = c.dataset.embed;
-        fetch(c.dataset.embed)
-            .then(res => res.text())
-            .then(html => {
-                const body = c.querySelector(".card-content");
-                body.innerHTML = html;
-                c.removeAttribute("data-pre-init");
-                const spinner = c.querySelector(".card-loading-placeholder");
-                if (spinner) {
-                    spinner.parentNode.removeChild(spinner);
-                }
-                const fragLoadedEvt = new CustomEvent("fragment-loaded", {
-                    bubbles: true
-                });
-                c.dispatchEvent(fragLoadedEvt);
-            })
+function sqlpage_embed() {
+  for (const c of document.querySelectorAll("[data-embed]:not([aria-busy=true])")) {
+    c.ariaBusy = true;
+    let url;
+    try {
+      url = new URL(c.dataset.embed, window.location.href)
+    } catch {
+      console.error(`'${c.dataset.embed}' is not a valid url`)
+      continue;
+    }
+    url.searchParams.set("_sqlpage_embed", "");
+
+    fetch(url)
+      .then(res => res.text())
+      .then(html => {
+        c.innerHTML = html;
+        c.ariaBusy = false;
+        delete c.dataset.embed;
+        c.dispatchEvent(new CustomEvent("fragment-loaded", {
+          bubbles: true
+      }));
+    })
+    .catch(err => console.error("Fetch error: ", err));
     }
 }
 
@@ -176,9 +181,14 @@ function sqlpage_form() {
     }
 }
 
-function get_tabler_color(name) {
-    return getComputedStyle(document.documentElement).getPropertyValue('--tblr-' + name);
+function create_tabler_color() {
+    const style = getComputedStyle(document.documentElement);
+  return function get_tabler_color(name) {
+    return style.getPropertyValue('--tblr-' + name);
 }
+}
+
+const get_tabler_color = create_tabler_color();
 
 function load_scripts() {
   let addjs = document.querySelectorAll("[data-sqlpage-js]");
@@ -198,6 +208,6 @@ function add_init_fn(f) {
 
 add_init_fn(sqlpage_table);
 add_init_fn(sqlpage_map);
-add_init_fn(sqlpage_card);
+add_init_fn(sqlpage_embed);
 add_init_fn(sqlpage_form);
 add_init_fn(load_scripts);

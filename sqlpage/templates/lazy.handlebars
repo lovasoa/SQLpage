@@ -1,0 +1,13 @@
+<div class="{{default class "my-2"}}"{{~#if style}} style="{{style}}" {{/if~}}>
+    {{#each_row}}
+        <div data-embed="{{embed}}">
+            <div class="{{default class "card my-2"}}" {{~#if style}} style="{{style}}" {{/if~}}>
+                <div class="h-full w-full p-2 d-flex align-items-center justify-content-center">
+                    <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each_row}}
+</div>
