@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /examples/authentification/  # Block the folder "authentification" to avoid blocking by password
+Disallow: /examples/hash_password.sql  # Block access to specific sensitive SQL files like this
+Disallow: /Dockerfile  # Block access to Dockerfile
+
+Allow: /  # Allow access to all public-facing SQL-generated pages
+
+Sitemap: https://sql.datapage.app/sitemap.xml
