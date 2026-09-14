@@ -953,7 +953,7 @@ INSERT INTO parameter(component, name, description, type, top_level, optional) S
     ('search', 'Add a search bar at the top of the table, letting users easily filter table rows by value.', 'BOOLEAN', TRUE, TRUE),
     ('initial_search_value', 'Pre-fills the search bar used to filter the table. The user will still be able to edit the value to display table rows that will initially be filtered out.', 'TEXT', TRUE, TRUE),
     ('search_placeholder', 'Customizes the placeholder text shown in the search input field. Replaces the default "Search..." with text that better describes what users should search for.', 'TEXT', TRUE, TRUE),
-    ('markdown', 'Set this to the name of a column whose content should be interpreted as markdown . Used to display rich text with links in the table. This argument can be repeated multiple times to intepret multiple columns as markdown.', 'TEXT', TRUE, TRUE),
+    ('markdown', 'Set this to the name of a column whose content should be interpreted as markdown. Used to display rich text with links in the table. This argument can be repeated multiple times to intepret multiple columns as markdown.', 'TEXT', TRUE, TRUE),
     ('icon', 'Set this to the name of a column whose content should be interpreted as a tabler icon name. Used to display icons in the table. This argument can be repeated multiple times to intepret multiple columns as icons. Introduced in v0.8.0.', 'TEXT', TRUE, TRUE),
     ('align_right', 'Name of a column the contents of which should be right-aligned. This argument can be repeated multiple times to align multiple columns to the right. Introduced in v0.15.0.', 'TEXT', TRUE, TRUE),
     ('align_center', 'Name of a column the contents of which should be center-aligned. This argument can be repeated multiple times to align multiple columns to the center.', 'TEXT', TRUE, TRUE),
@@ -977,6 +977,8 @@ INSERT INTO parameter(component, name, description, type, top_level, optional) S
     ('edit_url', 'If set, an edit button will be added to each row. The value of this property should be a URL, possibly containing the `{id}` placeholder that will be replaced by the value of the `_sqlpage_id` property for that row. Clicking the edit button will take the user to that URL. Added in v0.39.0', 'TEXT', TRUE, TRUE),
     ('delete_url', 'If set, a delete button will be added to each row. The value of this property should be a URL, possibly containing the `{id}` placeholder that will be replaced by the value of the `_sqlpage_id` property for that row. Clicking the delete button will take the user to that URL. Added in v0.39.0', 'TEXT', TRUE, TRUE),
     ('custom_actions', 'If set, a column of custom action buttons will be added to each row. The value of this property should be a JSON array of objects, each object defining a button with the following properties: `name` (the text to display on the button), `icon` (the tabler icon name or image link to display on the button), `link` (the URL to navigate to when the button is clicked, possibly containing the `{id}` placeholder that will be replaced by the value of the `_sqlpage_id` property for that row), and `tooltip` (optional text to display when hovering over the button). Added in v0.39.0', 'JSON', TRUE, TRUE),
+    ('column_visibility','Specify the minimum screen resolution at which the columns should be displayed for `phone`, `tablet`, `desktop`, and `large_desktop`. Defaults to `phone`. Introduced in v0.47.0.', 'JSON', TRUE, TRUE),
+    ('badges','Set this to the name of a column whose content should be interpreted as badges. This argument can be repeated multiple times to intepret multiple columns as badges. Introduced in v0.47.0.','TEXT',TRUE,TRUE),
     -- row level
     ('_sqlpage_css_class', 'For advanced users. Sets a css class on the table row. Added in v0.8.0.', 'TEXT', FALSE, TRUE),
     ('_sqlpage_color', 'Sets the background color of the row. Added in v0.8.0.', 'COLOR', FALSE, TRUE),
@@ -999,6 +1001,29 @@ INSERT INTO example(component, description, properties) VALUES
         '{"icon": "table", "name": "[Table](?component=table)", "description": "Displays SQL results as a searchable table.", "_sqlpage_color": "red"},
         {"icon": "timeline", "name": "[Chart](?component=chart)", "description": "Show graphs based on numeric data."}
         ]')),
+    (
+        'table', 'A table that uses badges to display user permissions.
+        
+To describe the badges contained in a column, you need to create a JSON array. Each object represents a badge defined 
+using the following properties:
+
+- `title`: the text displayed on the badge.
+- `size`: the size of the badge (e.g., sm, lg).
+- `color`: the color of the badge (e.g., red, green, blue, but also primary, warning, danger, etc.). Only base color names are supported.
+- `light`: create a light version of the badge (boolean).
+- `pill`: badge with rounded corners (boolean).
+- `link`: add a link to the badge and make it clickable.                                 
+
+        ',
+        json(
+        '[{"component":"table", "badges": "Permissions"},
+         {"Username": "john.doe", "Permissions": [{"title":"read","color":"green"}]},
+         {"Username": "mary.johnson", "Permissions": [{"title":"admin","color":"blue"},{"title":"read","color":"green"},{"title":"write","color":"blue"}]},
+         {"Username": "robert.brown", "Permissions": [{"title":"read","color":"green"},{"title":"write","color":"blue"}]},
+         {"Username": "emily.davis", "Permissions": [{"title":"read","color":"blue"}]},
+         {"Username": "michael.wilson", "Permissions": [{"title":"read","color":"green"},{"title":"write","color":"blue"}]},
+        ]'
+    )),
     ('table', 'A sortable table with a colored footer showing the average value of its entries.',
         json('[{"component":"table", "sort":true}, '||
         '{"Person": "Rudolph Lingens", "Height": 190},' ||
@@ -1111,6 +1136,38 @@ Numbers can be displayed
     }
 ]')
     ),
+    (
+    'table',
+    'A table that adapts its layout to the resolution of the device being used.
+
+If your table contains many columns, it won’t be comfortable to read on a mobile device such as a phone or tablet. 
+To solve this problem, the `column_visibility` setting allows you to specify the minimum resolution at which 
+a column should be displayed.
+
+- `phone`: The column is displayed on all devices.
+- `tablet`: The column is displayed on all devices with width greater than 768px.
+- `desktop`: The column is displayed on all devices with width greater than 992px.
+- `large_desktop`: The column is displayed only on devices with width greater than 1200px.
+
+To specify column visibility, simply provide a JSON object in which the column name is the key and the selected resolution 
+is the value. By default, a column is visible starting at the `phone` resolution.
+
+To try the example below, feel free to resize your browser window.
+    ',
+    json(
+        '[{"component":"table",
+                "hover": true, "striped_rows": true,
+                "description": "Some Star Trek Starfleet starships",
+                "small": true,
+                "column_visibility": {"registry":"tablet","class":"desktop","commander":"large_desktop"}
+        },
+         {"name": "USS Enterprise", "registry": "NCC-1701", "class":"Constitution", "commander": "James T. Kirk"},
+         {"name": "USS Voyager", "registry": "NCC-74656", "class":"Intrepid", "commander": "Kathryn Janeway"},
+         {"name": "USS Constellation", "registry": "NCC-1974", "class":"Constellation","commander": "Matt Decker"},
+         {"name": "USS Enterprise", "registry": "NX-01", "class":"Ambassador", "commander": "Jonathan Archer"},
+         {"name": "USS Defiant", "registry": "IX-74205", "class":"Defiant", "commander": "Benjamin Sisko"}
+        ]'
+    )),
     (
     'table',
     '# Dynamic column names in a table

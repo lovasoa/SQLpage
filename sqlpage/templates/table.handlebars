@@ -40,6 +40,18 @@
                                     _col_{{replace @key ' ' '_'~}}
                                     {{~#if (array_contains_case_insensitive ../../align_right @key)}} text-end {{/if~}}
                                     {{~#if (array_contains_case_insensitive ../../align_center @key)}} text-center {{/if~}}
+                                    {{#if ../../column_visibility}}
+                                        {{#with (lookup ../../column_visibility @key)}}
+                                            {{~#if (eq this "tablet")}} d-none d-md-table-cell
+                                            {{else}}
+                                                {{~#if (eq this "desktop")}} d-none d-lg-table-cell
+                                                {{else}}
+                                                    {{~#if (eq this "large_desktop")}} d-none d-xl-table-cell {{else}} d-table-cell {{/if}}
+                                                {{/if}}
+                                            {{/if}}
+                                        {{~else}} d-table-cell
+                                        {{/with}}
+                                    {{/if}}
                                 "
                                     data-column_type="{{typeof this}}"
                                     {{~#if (array_contains_case_insensitive ../../raw_numbers @key)}} data-raw_number="1"{{/if~}}
@@ -75,6 +87,18 @@
                                 {{~#if (array_contains_case_insensitive ../../align_right @key)}} text-end {{/if~}}
                                 {{~#if (array_contains_case_insensitive ../../align_center @key)}} text-center {{/if~}}
                                 {{~#if (array_contains_case_insensitive ../../monospace @key)}} font-monospace {{/if~}}
+                                {{#if ../../column_visibility}}
+                                    {{#with (lookup ../../column_visibility @key)}}
+                                        {{~#if (eq this "tablet")}} d-none d-md-table-cell
+                                        {{else}}
+                                            {{~#if (eq this "desktop")}} d-none d-lg-table-cell
+                                            {{else}}
+                                                {{~#if (eq this "large_desktop")}} d-none d-xl-table-cell {{else}} d-table-cell {{/if}}
+                                            {{/if}}
+                                        {{/if}}
+                                    {{~else}} d-table-cell
+                                    {{/with}}
+                                {{/if}}
                             ">
                                 {{~#if (array_contains_case_insensitive ../../markdown @key)~}}
                                     {{{markdown this}}}
@@ -82,7 +106,22 @@
                                 {{~#if (array_contains_case_insensitive ../../icon @key)~}}
                                     {{~icon_img this~}}
                                 {{~else~}}
+                                {{~#if (array_contains_case_insensitive ../../badges @key)~}}
+                                    <div class="badges-list">
+                                    {{~#each this~}}
+                                        {{~#with this~}}
+                                            {{#delay}}{{#if size}}badge-{{size}}{{/if}}{{#if color}}{{#if (not light)}} bg-{{color}} text-{{color}}-fg{{else}} bg-{{color}}-lt text-{{color}}-lt-fg{{/if}}{{/if}}{{#if pill}} badge-pill{{/if}}{{/delay}}
+                                            {{~#if link~}}
+                                            <a href="{{link}}" class="badge {{flush_delayed}}">{{title}}</a>
+                                            {{~else~}}
+                                            <span class="badge {{flush_delayed}}">{{title}}</span>
+                                            {{~/if~}}
+                                        {{~/with~}}
+                                    {{~/each~}}
+                                    </div>
+                                {{~else~}}
                                     {{this}}
+                                {{~/if~}}
                                 {{~/if~}}
                                 {{~/if~}}
                             </td>
