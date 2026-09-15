@@ -1,0 +1,28 @@
+{{#delay}}
+{{~#if controls}} controls{{/if}}
+{{~#if preload}} preload="{{preload}}"{{/if}}
+{{~#if crossorigin}} crossorigin="{{crossorigin}}"{{/if}}
+{{~#if disable_remote_playback}} disableremoteplayback{{/if}}
+{{~#if autoplay}} autoplay{{/if}}
+{{~#if loop}} loop{{/if}}
+{{~#if muted}} muted{{/if}}
+{{~#if loading}} loading="{{loading}}"{{/if}}
+{{~#if controls_list}} controlslist="{{#each (to_array controls_list)}}{{this}} {{/each}}"{{/if}}
+{{~#if width}} width="{{width}}"{{/if}}
+{{~#if poster}} poster="{{poster}}"{{/if}}
+{{~#if plays_inline}} playsinline{{/if}}
+{{~#if disable_picture_in_picture}} disablepictureinpicture{{/if}}
+{{/delay}}
+<div class="my-2 d-flex flex-column {{class}}{{#if center}} align-items-center{{/if}}"{{~#if id}} id="{{id}}"{{/if}}>
+{{#if title}}<h1 class="mb-1">{{title}}</h1>{{/if}}
+<{{type}} {{flush_delayed}}>
+{{#each_row}}
+<source src="{{src}}" {{#if type}}type='{{type}}{{#if codecs}}; codecs="{{codecs}}"{{/if}}'{{/if}}>  
+{{/each_row}}
+{{#each (parse_json tracks)}}
+<track{{#if kind}} kind="{{kind}}"{{/if}}{{#if src}} src="{{src}}"{{/if}}{{#if srclang}} srclang="{{srclang}}"{{/if}}{{#if label}} label="{{label}}"{{/if}} {{#if default}}default{{/if}}>
+{{/each}}
+{{default fallback_text 'Your browser does not support playing this media.'}}
+</{{type}}>
+{{~#if description_md}}{{{markdown description_md}}}{{else}}{{#if description}}<p class="mt-2 mb-0">{{description}}</p>{{/if}}{{/if~}}
+</div>
